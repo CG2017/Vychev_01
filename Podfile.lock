@@ -1,0 +1,13 @@
+PODS:
+  - iOS-Color-Picker (1.1.4)
+  - Masonry (0.6.4)
+
+DEPENDENCIES:
+  - iOS-Color-Picker
+  - Masonry
+
+SPEC CHECKSUMS:
+  iOS-Color-Picker: 0eebf395527785e1ff2180c35b69f6d369051555
+  Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
+
+COCOAPODS: 0.39.0
