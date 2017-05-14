@@ -12,58 +12,77 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="metadata.Controller">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="metadata.Controller">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem id="openDirectory" mnemonicParsing="false" onAction="#onChooseDirectoryClicked" text="Open…" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#onQuitClicked" text="Quit" />
+                        <MenuItem id="openDirectory" mnemonicParsing="false" onAction="#onChooseDirectoryClicked"
+                                  text="Open…"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" onAction="#onQuitClicked" text="Quit"/>
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <children>
-                <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+                <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;"
+                       text="Drag components from Library here…" textAlignment="CENTER" textFill="#9f9f9f"
+                       wrapText="false">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="data" layoutX="55.0" layoutY="69.0" prefHeight="371.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TableView fx:id="data" layoutX="55.0" layoutY="69.0" prefHeight="371.0" prefWidth="640.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0" fixedCellSize="50">
                     <columns>
                         <TableColumn fx:id="nameCol" prefWidth="75.0" text="name">
                             <cellValueFactory>
-                                <PropertyValueFactory property="name" />
+                                <PropertyValueFactory property="name"/>
                             </cellValueFactory>
                         </TableColumn>
-                  <TableColumn prefWidth="75.0" text="file size">
-                      <cellValueFactory>
-                          <PropertyValueFactory property="fileSize" />
-                      </cellValueFactory>
-                  </TableColumn>
-                  <TableColumn fx:id="fileModifierDate" prefWidth="75.0" text="file modified date" />
-                  <TableColumn fx:id="orientation" prefWidth="75.0" text="orientation" />
+                        <TableColumn fx:id="fileSizeCol" prefWidth="75.0" text="file size">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="fileSize"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="fileModifiedDateCol" prefWidth="75.0" text="file modified date">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="fileModifiedDate"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="orientationCol" prefWidth="75.0" text="orientation">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="orientation"/>
+                            </cellValueFactory>
+                        </TableColumn>
                         <TableColumn fx:id="dimensionCol" prefWidth="75.0" text="dpi">
                             <cellValueFactory>
-                                <PropertyValueFactory property="dimension" />
+                                <PropertyValueFactory property="dimension"/>
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn fx:id="resolutionCol" prefWidth="75.0" text="resolution">
                             <cellValueFactory>
-                                <PropertyValueFactory property="resolution" />
+                                <PropertyValueFactory property="resolution"/>
                             </cellValueFactory>
                         </TableColumn>
                         <TableColumn fx:id="compressionCol" prefWidth="75.0" text="compression">
                             <cellValueFactory>
-                                <PropertyValueFactory property="compression" />
+                                <PropertyValueFactory property="compression"/>
                             </cellValueFactory>
                         </TableColumn>
+                        <!--<TableColumn fx:id="otherCol" prefWidth="75.0" text="other">-->
+                            <!--<cellValueFactory>-->
+                                <!--<PropertyValueFactory property="other"/>-->
+                            <!--</cellValueFactory>-->
+                        <!--</TableColumn>-->
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
             </children>
