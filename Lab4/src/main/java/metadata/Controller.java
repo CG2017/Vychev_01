@@ -58,6 +58,11 @@ public class Controller {
                     continue;
                 }
 
+                if ("Compression".equals(tag.getTagName())) {
+                    item.setCompression(tag.getDescription());
+                    continue;
+                }
+
                 if ("Image Height".equals(tag.getTagName())) {
                     item.setResolution(tag.getDescription().split(" ")[0]);
                     continue;
@@ -74,7 +79,11 @@ public class Controller {
                 }
 
                 if ("Y Max".equals(tag.getTagName())) {
-                    item.setResolution(item.getResolution() + "x" + tag.getDescription().split(" ")[0]);
+                    if (name.contains("pcx")) {
+                        item.setResolution((Integer.valueOf(item.getResolution()) + 1) + "x" + (Integer.valueOf(tag.getDescription().split(" ")[0]) + 1));
+                    } else {
+                        item.setResolution(item.getResolution() + "x" + tag.getDescription().split(" ")[0]);
+                    }
                     continue;
                 }
 
