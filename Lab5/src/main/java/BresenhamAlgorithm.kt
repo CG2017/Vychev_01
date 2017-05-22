@@ -2,6 +2,7 @@ import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.JFreeChart
 import org.jfree.chart.axis.NumberAxis
+import org.jfree.chart.axis.ValueAxis
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.plot.XYPlot
 import org.jfree.data.xy.XYDataItem
@@ -93,7 +94,6 @@ class BresenhamAlgorithm(title: String, x0: Int, y0: Int, x1: Int, y1: Int) : JF
         plot.domainGridlinePaint = Color.white
         plot.rangeGridlinePaint = Color.white
 
-
         minX = (series.items[0] as XYDataItem).x.toInt()
         minY = (series.items[0] as XYDataItem).y.toInt()
         maxX = (series.items[0] as XYDataItem).x.toInt()
@@ -112,8 +112,11 @@ class BresenhamAlgorithm(title: String, x0: Int, y0: Int, x1: Int, y1: Int) : JF
                 minY = item.y.toInt()
             }
         }
-        plot.renderer = ScaleRenderer(false)
+        plot.renderer = ScaleRenderer()
         val rangeAxis = plot.rangeAxis as NumberAxis
+        val domainAxis = plot.domainAxis as ValueAxis
+        rangeAxis.setRange(0.0, maxY + 1.0)
+        domainAxis.setRange(0.0, maxX + 1.0)
         rangeAxis.standardTickUnits = NumberAxis.createIntegerTickUnits()
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.black)
         return chart

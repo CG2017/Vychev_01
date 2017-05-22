@@ -10,24 +10,14 @@ import org.jfree.ui.RectangleEdge
 import java.awt.*
 import java.awt.geom.Rectangle2D
 
-class ScaleRenderer : XYLineAndShapeRenderer {
-    protected var barwidthfactor = DEFAULT_WIDTH_FACTOR
-    private var isCircle = false
+class ScaleRenderer() : XYLineAndShapeRenderer() {
+    private val barwidthfactor = DEFAULT_WIDTH_FACTOR
+    private var thedot: Shape? = null
 
-    private val xPrev = 0.0
-    private val yPrev = 0.0
-
-    protected var thedot: Shape? = null
-
-    constructor(factor: Double, isCircle: Boolean) : this(isCircle) {
-        this.barwidthfactor = factor
-
-    }
-
-    constructor(isCircle: Boolean) : super() {
+    init {
         baseLinesVisible = false
         baseShapesVisible = true
-        this.isCircle = isCircle
+        useOutlinePaint = true
     }
 
     override fun initialise(g2: Graphics2D?,
@@ -35,6 +25,7 @@ class ScaleRenderer : XYLineAndShapeRenderer {
                             plot: XYPlot?,
                             data: XYDataset?,
                             info: PlotRenderingInfo): XYItemRendererState {
+
         thedot = null
         return super.initialise(g2, dataArea, plot, data, info)
     }
@@ -45,45 +36,34 @@ class ScaleRenderer : XYLineAndShapeRenderer {
                           series: Int, item: Int, crosshairState: CrosshairState, pass: Int) {
 
         if (thedot == null) {
-            val yDist = 1.0
-            val xDist = 1.0
             var width = 0.0
             var height = 0.0
             val domainEdge = plot.domainAxisEdge
             val rangeEdge = plot.rangeAxisEdge
-            val widthms = xDist * 2 - xDist * 2 * 0.01
-            val heightms = yDist * 2 - yDist * 2 * 0.01
-            var left = dataset.getXValue(series, item) - widthms
-            var up = dataset.getYValue(series, item) - heightms
+            val widthms = 1.0
+            var left = dataset.getXValue(series, item).toInt() - widthms
+            var top = dataset.getYValue(series, item).toInt() - widthms
 
-            for (j in 0..1) { // check at least two bars to ensure an accurate width
+            for (j in 0..1) {
                 val right = left + widthms
+                val bottom = top + widthms
                 val lpos = domainAxis.valueToJava2D(left, dataArea, domainEdge)
                 val rpos = domainAxis.valueToJava2D(right, dataArea, domainEdge)
+                val tpos = rangeAxis.valueToJava2D(top, dataArea, rangeEdge)
+                val bpos = rangeAxis.valueToJava2D(bottom, dataArea, rangeEdge)
                 width = Math.max(width, Math.abs(rpos - lpos))
+                height = Math.max(height, Math.abs(tpos - bpos))
                 left += widthms
-
-                val down = up + heightms
-                val upos = rangeAxis.valueToJava2D(up, dataArea, rangeEdge)
-                val dpos = rangeAxis.valueToJava2D(down, dataArea, rangeEdge)
-                height = Math.max(height, Math.abs(upos - dpos))
-                up += heightms
+                top += widthms
             }
+
             width *= barwidthfactor
             height *= barwidthfactor
-            thedot = Rectangle2D.Double(-width * 0.5, -height * 0.5, width, height)
-
+            thedot = Rectangle(0, (-height).toInt(), width.toInt(), height.toInt())
         }
 
-        val maxX = plot.getDataRange(plot.domainAxis).upperBound + 10
-        val minX = plot.getDataRange(plot.domainAxis).lowerBound - 10
-
-        val maxY = plot.getDataRange(plot.rangeAxis).upperBound + 10
-        val minY = plot.getDataRange(plot.rangeAxis).lowerBound - 10
-
-        plot.domainAxis.upperBound = maxX
-        plot.domainAxis.lowerBound = minX
-        super.drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, dataset, series, item, crosshairState, pass)
+        super.drawItem(g2, state, dataArea, info, plot, domainAxis, rangeAxis, dataset, series, item, crosshairState,
+                pass)
     }
 
     override fun getItemShape(series: Int, item: Int): Shape {
@@ -91,6 +71,6 @@ class ScaleRenderer : XYLineAndShapeRenderer {
     }
 
     companion object {
-        protected val DEFAULT_WIDTH_FACTOR = 0.5
+        private val DEFAULT_WIDTH_FACTOR = 1.0
     }
 }

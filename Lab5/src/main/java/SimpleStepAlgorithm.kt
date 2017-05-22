@@ -4,6 +4,7 @@ import org.jfree.chart.JFreeChart
 import org.jfree.chart.axis.NumberAxis
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.plot.XYPlot
+import org.jfree.data.xy.XYDataItem
 import org.jfree.data.xy.XYDataset
 import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
@@ -14,6 +15,10 @@ import java.awt.*
 class SimpleStepAlgorithm(title: String, x0: Int, y0: Int, x1: Int, y1: Int) : JFrame(title) {
 
     lateinit var series: XYSeries
+    internal var minX: Int = 0
+    internal var maxX: Int = 0
+    internal var minY: Int = 0
+    internal var maxY: Int = 0
 
     init {
         this.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
@@ -78,8 +83,31 @@ class SimpleStepAlgorithm(title: String, x0: Int, y0: Int, x1: Int, y1: Int) : J
         plot.backgroundPaint = Color.lightGray
         plot.domainGridlinePaint = Color.white
         plot.rangeGridlinePaint = Color.white
-        plot.renderer = ScaleRenderer(false)
+
+        minX = (series.items[0] as XYDataItem).x.toInt()
+        minY = (series.items[0] as XYDataItem).y.toInt()
+        maxX = (series.items[0] as XYDataItem).x.toInt()
+        maxY = (series.items[0] as XYDataItem).y.toInt()
+        for (item in series.items) {
+            if ((item as XYDataItem).x.toInt() >= maxX) {
+                maxX = item.x.toInt()
+            }
+            if (item.x.toInt() <= minX) {
+                minX = item.x.toInt()
+            }
+            if (item.y.toInt() >= maxY) {
+                maxY = item.y.toInt()
+            }
+            if (item.y.toInt() <= minY) {
+                minY = item.y.toInt()
+            }
+        }
+
+        plot.renderer = ScaleRenderer()
         val rangeAxis = plot.rangeAxis as NumberAxis
+        val domainAxis = plot.domainAxis
+        rangeAxis.setRange(0.0, maxY + 1.0)
+        domainAxis.setRange(0.0, maxX + 1.0)
         rangeAxis.standardTickUnits = NumberAxis.createIntegerTickUnits()
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.black)
         return chart

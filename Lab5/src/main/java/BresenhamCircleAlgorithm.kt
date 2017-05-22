@@ -2,8 +2,10 @@ import org.jfree.chart.ChartFactory
 import org.jfree.chart.ChartPanel
 import org.jfree.chart.JFreeChart
 import org.jfree.chart.axis.NumberAxis
+import org.jfree.chart.axis.ValueAxis
 import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.plot.XYPlot
+import org.jfree.data.xy.XYDataItem
 import org.jfree.data.xy.XYDataset
 import org.jfree.data.xy.XYSeries
 import org.jfree.data.xy.XYSeriesCollection
@@ -13,11 +15,18 @@ import java.awt.*
 
 class BresenhamCircleAlgorithm(title: String, x0: Int, y1: Int, R: Int) : JFrame(title) {
 
+    internal var series: XYSeries
+    internal var minX: Int = 0
+    internal var maxX: Int = 0
+    internal var minY: Int = 0
+    internal var maxY: Int = 0
+
     init {
         this.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
 
         val dataset = XYSeriesCollection()
-        dataset.addSeries(getCoordinates(x0, y1, R))
+        series = getCoordinates(x0, y1, R)
+        dataset.addSeries(series)
         val chart = createChart(dataset)
         val chartPanel = ChartPanel(chart)
         contentPane = chartPanel
@@ -71,8 +80,30 @@ class BresenhamCircleAlgorithm(title: String, x0: Int, y1: Int, R: Int) : JFrame
         plot.domainGridlinePaint = Color.white
         plot.rangeGridlinePaint = Color.white
 
-        plot.renderer = ScaleRenderer(true)
+        minX = (series.items[0] as XYDataItem).x.toInt()
+        minY = (series.items[0] as XYDataItem).y.toInt()
+        maxX = (series.items[0] as XYDataItem).x.toInt()
+        maxY = (series.items[0] as XYDataItem).y.toInt()
+        for (item in series.items) {
+            if ((item as XYDataItem).x.toInt() >= maxX) {
+                maxX = item.x.toInt()
+            }
+            if (item.x.toInt() <= minX) {
+                minX = item.x.toInt()
+            }
+            if (item.y.toInt() >= maxY) {
+                maxY = item.y.toInt()
+            }
+            if (item.y.toInt() <= minY) {
+                minY = item.y.toInt()
+            }
+        }
+
+        plot.renderer = ScaleRenderer()
         val rangeAxis = plot.rangeAxis as NumberAxis
+        val domainAxis = plot.domainAxis
+        rangeAxis.setRange(minY - 1.0, maxY + 1.0)
+        domainAxis.setRange(minX - 1.0, maxX + 1.0)
         rangeAxis.standardTickUnits = NumberAxis.createIntegerTickUnits()
         plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.black)
 
